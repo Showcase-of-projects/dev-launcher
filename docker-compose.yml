@@ -1,0 +1,62 @@
+version: '3.8'
+
+services:
+  eureka-server:
+    build: ./eureka-server
+    container_name: eureka-server
+    ports:
+      - "8761:8761"
+    networks:
+      - micro-net
+
+  topic-service:
+    build: ./topic-service
+    container_name: topic-service
+    depends_on:
+      - topic-db
+      - eureka-server
+    environment:
+      DB_IP: topic-db
+      DB_PORT: 5432
+      DB_NAME: topic_service_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    ports:
+      - "8081:8081"
+    networks:
+      - micro-net
+
+  topic-db:
+    image: postgres:15
+    container_name: topic-db
+    environment:
+      POSTGRES_DB: topic_service_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5433:5432"
+    networks:
+      - micro-net
+    volumes:
+      - topic_db_data:/var/lib/postgresql/data
+
+  gateway:
+    build: ./gateway
+    container_name: gateway
+    depends_on:
+      - eureka-server
+      - topic-service
+    environment:
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    ports:
+      - "8080:8080"
+    networks:
+      - micro-net
+
+volumes:
+  topic_db_data:
+
+networks:
+  micro-net:
+    driver: bridge
