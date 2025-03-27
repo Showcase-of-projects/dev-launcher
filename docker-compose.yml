@@ -40,6 +40,7 @@ services:
       - micro-net
     volumes:
       - topic_db_data:/var/lib/postgresql/data
+      - ./init/topic-init.sql:/docker-entrypoint-initdb.d/topic-init.sql:ro
 
   gateway:
     build: ./gateway
