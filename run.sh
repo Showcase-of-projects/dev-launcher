@@ -4,7 +4,10 @@ declare -A REPOS=(
   ["eureka-server"]="https://github.com/Showcase-of-projects/eureka-server.git"
   ["gateway"]="https://github.com/Showcase-of-projects/gateway.git"
   ["topic-service"]="https://github.com/Showcase-of-projects/topic-service.git"
+  ["auth-service"]="https://github.com/Showcase-of-projects/auth-service.git"
+  ["team-service"]="https://github.com/Showcase-of-projects/team-service.git"
 )
+
 
 BRANCH="master"
 UPDATED_SERVICES=()

@@ -54,6 +54,43 @@ services:
       - "8080:8080"
     networks:
       - micro-net
+  
+  auth-service:
+    build: ./auth-service
+    container_name: auth-service
+    depends_on:
+      - topic-db
+      - eureka-server
+    environment:
+      DB_IP: topic-db
+      DB_PORT: 5432
+      DB_NAME: topic_service_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    ports:
+      - "8082:8082"
+    networks:
+      - micro-net
+
+  team-service:
+    build: ./team-service
+    container_name: team-service
+    depends_on:
+      - topic-db
+      - eureka-server
+    environment:
+      DB_IP: topic-db
+      DB_PORT: 5432
+      DB_NAME: topic_service_db
+      DB_USER: postgres
+      DB_PASSWORD: postgres
+      EUREKA_CLIENT_SERVICEURL_DEFAULTZONE: http://eureka-server:8761/eureka/
+    ports:
+      - "8083:8083"
+    networks:
+      - micro-net
+
 
 volumes:
   topic_db_data:
